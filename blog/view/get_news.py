@@ -1,0 +1,33 @@
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import NotFound
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from blog.models import New, NewsName
+
+
+class NewsDetail(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def get(self,request,pk):
+        try:
+            news_object = New.objects.select_related("author").get(pk=pk)
+        except ObjectDoesNotExist:
+            raise NotFound("News not found")
+        news = NewsName.objects.select_related("news").filter(news=news_object)
+        news_name = []
+        for new in news:
+            news_name.append({
+                "title":new.title,
+                "description":new.description,
+                "language":new.language
+            })
+
+        data = {
+            "news_name":news_name,
+            "added_at":news_object.added_at,
+            "author":news_object.author.username
+        }
+        return Response(data)

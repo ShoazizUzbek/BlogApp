@@ -1,0 +1,8 @@
+asgiref==3.3.1
+Django==3.1.4
+djangorestframework==3.11.1
+future==0.18.2
+psycopg2-binary==2.8.5
+pytz==2020.4
+serializers==0.2.4
+sqlparse==0.4.1
